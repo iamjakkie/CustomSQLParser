@@ -1,0 +1,3 @@
+[submodule "Pickuery_structures"]
+	path = Pickuery_structures
+	url = git@github.com:iamjakkie/Pickuery_structures.git
