@@ -9,3 +9,6 @@ class Token:
         if self.value:
             return f"{self.type}:{self.value}"
         return f"{self.type}"
+
+class TokenType():
+    pass
