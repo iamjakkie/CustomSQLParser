@@ -1,34 +1,141 @@
+from enum import auto
+from utils.tokenutils import IdGenerator
+
+
 # Token categories
-EOF = 0
-TABLE = 1 
-COLUMN = 2
-ASSIGNOP = 3
-LEFTPAREN = 4
-RIGHTPAREN = 5
-COMMA = 6
-DOT = 7
-PLUS = 8
-COLON = 9
-SEMICOLON = 10
-STAR = 11
-SLASH = 12
-LT = 13
-LTE = 14
-GT = 15
-GTE = 16
-NOT = 17
-EQ = 18
-NEQ = 19
-AND = 20
-OR = 21
+class TokenType(IdGenerator):
+    EOF = auto()
+    ASSIGNOP = auto()
+    LEFTPAREN = auto()
+    RIGHTPAREN = auto()
+    COMMA = 6
+    DOT = 7
+    PLUS = 8
+    COLON = 9
+    SEMICOLON = 10
+    STAR = 11
+    SLASH = 12
+    LT = 13
+    LTE = 14
+    GT = 15
+    GTE = 16
+    NOT = 17
+    EQ = 18
+    NEQ = 19
+    AND = 20
+    OR = 21
 
-SPACE = 22
-BREAK = 23
+    SPACE = 22
+    BREAK = 23
 
-STRING = 24
-NUMBER = 25
+    STRING = 24
+    NUMBER = 25
+    COLUMN = 24
+    SCHEMA = 25
+    TABLE = 26
+
+    NUMBER = 27
+    DECIMAL = 28
+    NUMERIC = 29
+    INT = 30
+    INTEGER = 31
+    BIGINT = 32
+    SMALLINT = 33
+    TINYINT = 34
+    BYTEINT = 35
+    FLOAT = 36
+    FLOAT4 = 37
+    FLOAT8 = 38
+    DOUBLE = 39
+    DOUBLEPRECISION = 40
+    REAL = 41
+    VARCHAR = 42
+    CHAR = 43
+    CHARACTER = 44
+    TEXT = 45
+    BINARY = 46
+    VARBINARY = 47
+    BOOLEAN = 48
+    DATE = 49
+    DATETIME = 50
+    TIME = 51
+    TIMESTAMP = 52
+    TIMESTAMP_LTZ = 53
+    TIMESTAMP_NTZ = 54
+    TIMESTAMP_TZ = 55
+    VARIANT = 56
+    OBJECT = 57
+    ARRAY = 58
+    GEOGRAPHY = 59
+
+    ALIAS = 60
+    AS = 61
+    ASC = 61
+    BETWEEN = 62
+    BY = 63
+    CASE = 64
+    CAST = 65
+    COUNT = 66
+    COMMENT = 67
+    COMMENT_END = 68
+    COMMENT_START = 69
+    CREATE = 70
+    CROSS = 71
+    DELETE = 72
+    DESC = 73
+    DISTINCT = 74
+    DROP = 75
+    ELSE = 76
+    END = 77
+    EXCEPT = 78
+    EXISTS = 79
+    EXTRACT = 80
+    FALSE = 81
+    FULL = 82
+    FROM = 83
+    GROUP = 84
+    HAVING = 85
+    IF = 86
+    IN = 87
+    INNER = 88
+    INSERT = 89
+    INTERSECT = 90
+    INTERVAL = 91
+    INTO = 92
+    IS = 93
+    JOIN = 94
+    LATERAL = 95
+    LEFT = 96
+    LIKE = 97
+    LIMIT = 98
+    NULL = 99
+    ON = 100
+    ORDER = 101
+    OUTER = 102
+    OVER = 103
+    PARTITION = 104
+    QSTRING = 105
+    DQSTRING = 106
+    RIGHT = 105
+    SELECT = 106
+    SET = 107
+    SHOW = 108
+    THEN = 109
+    TRUE = 110
+    TRUNCATE = 111
+    TRY_CAST = 112
+    UNION = 113
+    UNNEST = 114
+    UPDATE = 115
+    VALUES = 116
+    VIEW = 117
+    WHEN = 118
+    WHERE = 119
+    WITH = 120
 
 
+
+# current elem has to hold possible ways to use next
 
 
 class TokenType(AutoName):
