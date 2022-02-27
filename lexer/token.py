@@ -1,5 +1,32 @@
+# Token categories
 EOF = 0
-OBJECT = 1
+TABLE = 1 
+COLUMN = 2
+ASSIGNOP = 3
+LEFTPAREN = 4
+RIGHTPAREN = 5
+COMMA = 6
+DOT = 7
+PLUS = 8
+COLON = 9
+SEMICOLON = 10
+STAR = 11
+SLASH = 12
+LT = 13
+LTE = 14
+GT = 15
+GTE = 16
+NOT = 17
+EQ = 18
+NEQ = 19
+AND = 20
+OR = 21
+
+SPACE = 22
+BREAK = 23
+
+STRING = 24
+NUMBER = 25
 
 
 
