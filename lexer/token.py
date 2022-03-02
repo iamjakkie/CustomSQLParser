@@ -143,6 +143,8 @@ class Token(ABC):
     #TODO: Setters, getters, errors
     @abstractmethod
     def __init__(self, type, value) -> None:
+        # if not (type and value):
+        #     raise ValueError("No type or value provided")
         self.type = type
         self.value = value 
 
@@ -154,8 +156,7 @@ class Token(ABC):
 
 class SnowflakeToken(Token):
     def __init__(self, type, value) -> None:
-        self.type = type
-        self.value = value 
+        super().__init__(type, value)
 
     def __repr__(self) -> str:
         return super().__repr__()

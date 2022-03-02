@@ -1,5 +1,6 @@
 from typing import List
 from CustomSQLParser.lexer.token import Token
+# from CustomSQLParser.Pickuery_structures.ast import AST
 
 class Tokenizer():
     def __init__(self, tokentype, token) -> None:
@@ -171,13 +172,25 @@ class Tokenizer():
         print(query)
         statements = query.split()
         #TODO: convert to loop with try except, None should not become a Token object
-        tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
+        tokens = []
+        for word in statements:
+            tokens.append(self.tokenfamily(self.KEYWORDS.get(word), word))
+        statement_type = tokens[0].value
+        prevtoken = None
+        # tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
         for token in tokens:
-            # print(token)
-            currtoken = token
-            #TODO differentiate between operator and keyword, i.e. prevtoken = '(', prevcmd = 'FROM'
-            if(isinstance(currtoken, Token)):
-                print(currtoken)
+            #TODO: process here all the tokens to save the order
+            if not token.type:
+                print(prevtoken)
+                curchar = ''
+                for char in token.value:
+                    curchar+=char
+                    isToken = self.tokenfamily(self.KEYWORDS.get(curchar), curchar)
+                    if isToken:
+                        print(curchar)
+            prevtoken = token
+
+        for token in 
 
 
 # class SnowflakeTokenizer(Tokenizer):
