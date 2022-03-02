@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import auto
-from utils.tokenutils import IdGenerator
+from CustomSQLParser.utils.tokenutils import IdGenerator
 
 
 # Token categories
@@ -37,7 +37,6 @@ class SnowflakeTokenType(IdGenerator):
     SCHEMA = auto()
     TABLE = auto()
 
-    NUMBER = auto()
     DECIMAL = auto()
     NUMERIC = auto()
     INT = auto()
@@ -81,7 +80,7 @@ class SnowflakeTokenType(IdGenerator):
     CASE = auto()
     CAST = auto()
     COUNT = auto()
-    COMMENT = auto()
+    COMMENT_SINGLE = auto()
     COMMENT_END = auto()
     COMMENT_START = auto()
     CREATE = auto()
