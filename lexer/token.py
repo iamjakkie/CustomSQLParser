@@ -140,6 +140,7 @@ class SnowflakeTokenType(IdGenerator):
 
 
 class Token(ABC):
+    #TODO: Setters, getters, errors
     @abstractmethod
     def __init__(self, type, value) -> None:
         self.type = type

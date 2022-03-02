@@ -1,9 +1,10 @@
 from typing import List
-from CustomSQLParser.lexer.token import SnowflakeTokenType
+from CustomSQLParser.lexer.token import Token
 
 class Tokenizer():
-    def __init__(self, tokentype) -> None:
+    def __init__(self, tokentype, token) -> None:
         self.tokentype = tokentype
+        self.tokenfamily = token
         self.SINGLE_TOKENS = {
             "(": self.tokentype.LEFTPAREN,
             ")": self.tokentype.RIGHTPAREN,
@@ -167,9 +168,16 @@ class Tokenizer():
         }
 
     def tokenize(self, query:str):
+        print(query)
         statements = query.split()
-        tokens = [self.KEYWORDS.get(word, word) for word in statements]
-        print(tokens)
+        #TODO: convert to loop with try except, None should not become a Token object
+        tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
+        for token in tokens:
+            # print(token)
+            currtoken = token
+            #TODO differentiate between operator and keyword, i.e. prevtoken = '(', prevcmd = 'FROM'
+            if(isinstance(currtoken, Token)):
+                print(currtoken)
 
 
 # class SnowflakeTokenizer(Tokenizer):
