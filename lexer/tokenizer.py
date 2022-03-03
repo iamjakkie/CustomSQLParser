@@ -217,7 +217,7 @@ class Tokenizer():
                         elif chartoken.type is self.tokentype.RIGHTPAREN:
                             paren_depth-=1
                             prevtoken = currtoken
-                            
+
                         if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
                             tokens.append(self.createToken("COLUMN", curchar))
                             curchar = ''
@@ -231,6 +231,7 @@ class Tokenizer():
                         curchartoken = self.getToken(curchar)
                         if curchartoken.type:
                             tokens.append(curchartoken)
+                        
             else:
                 tokens.append(currtoken)
             prevtoken = currtoken
