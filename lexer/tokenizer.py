@@ -143,6 +143,8 @@ class Tokenizer():
             "TIMESTAMP": self.tokentype.TIMESTAMP,
             "TIMESTAMPTZ": self.tokentype.TIMESTAMP_TZ,
             "DATE": self.tokentype.DATE,
+
+            "COLUMN": self.tokentype.COLUMN,
         }
         self.WHITE_SPACE = {
             " ": self.tokentype.SPACE,
@@ -167,30 +169,82 @@ class Tokenizer():
             "/*": self.tokentype.COMMENT_START,
             "*/": self.tokentype.COMMENT_END,
         }
+        self.CMDTOKENS = {
+            self.tokentype.SELECT,
+            self.tokentype.FROM,
+        }
+
+    def getToken(self, value):
+        return self.tokenfamily(self.KEYWORDS.get(value), value)
+
+    # def getPrevCmd(self, token):
+    #     print(type(self.CMDTOKENS.SELECT))
+        # print(f"isinstance: {token.type is self.CMDTOKENS.SELECT}")
+        # if token.type is self.CMDTOKENS.SELECT:
+        #     print('here')
+        #     return token 
+
+    def createToken(self, type, value):
+        return self.tokenfamily(self.KEYWORDS.get(type), value)
 
     def tokenize(self, query:str):
         print(query)
         statements = query.split()
+        cmd = None
         #TODO: convert to loop with try except, None should not become a Token object
         tokens = []
-        for word in statements:
-            tokens.append(self.tokenfamily(self.KEYWORDS.get(word), word))
-        statement_type = tokens[0].value
-        prevtoken = None
+        # for word in statements:
+        #     tokens.append(self.tokenfamily(self.KEYWORDS.get(word), word))
+        # statement_type = tokens[0].value
+        prevtoken = prevcmd = None
+        paren_depth = 0
         # tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
-        for token in tokens:
+        for i, word in enumerate(statements):
+            print(f"{i}: {word}")
+            currtoken = self.getToken(word)
+            if i == 0:
+                cmd = currtoken
             #TODO: process here all the tokens to save the order
-            if not token.type:
-                print(prevtoken)
+            if not currtoken.type:
                 curchar = ''
-                for char in token.value:
-                    curchar+=char
-                    isToken = self.tokenfamily(self.KEYWORDS.get(curchar), curchar)
-                    if isToken:
-                        print(curchar)
-            prevtoken = token
-
-        for token in 
+                for char in currtoken.value:
+                    #TODO: char can be both, append to the prev char and separate token
+                    chartoken = self.getToken(char)
+                    if chartoken.type:
+                        if chartoken.type is self.tokentype.LEFTPAREN:
+                            paren_depth+=1
+                            prevtoken = currtoken
+                        elif chartoken.type is self.tokentype.RIGHTPAREN:
+                            paren_depth-=1
+                            prevtoken = currtoken
+                            
+                        if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
+                            tokens.append(self.createToken("COLUMN", curchar))
+                            curchar = ''
+                        elif curchar and prevcmd and prevcmd.type is self.tokentype.FROM:
+                            tokens.append(self.createToken("TABLE", curchar))
+                            curchar = ''
+                        tokens.append(chartoken)
+                        continue
+                    else:
+                        curchar+=char
+                        curchartoken = self.getToken(curchar)
+                        if curchartoken.type:
+                            tokens.append(curchartoken)
+            else:
+                tokens.append(currtoken)
+            prevtoken = currtoken
+            if currtoken.type is self.tokentype.SELECT or currtoken.type is self.tokentype.FROM:
+                prevcmd = currtoken
+            # try:
+            #     prevcmd = self.getPrevCmd(currtoken.type)
+            # except Exception as e:
+            #     print(e)
+        print(f"Paren depth: {paren_depth}")
+        print(f"Statement type: {cmd.value}")
+        print("Found tokens:")
+        for token in tokens:
+            print(token)
 
 
 # class SnowflakeTokenizer(Tokenizer):
