@@ -200,7 +200,6 @@ class Tokenizer():
         paren_depth = 0
         # tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
         for i, word in enumerate(statements):
-            print(f"{i}: {word}")
             currtoken = self.getToken(word)
             if i == 0:
                 cmd = currtoken
@@ -213,35 +212,58 @@ class Tokenizer():
                     if chartoken.type:
                         if chartoken.type is self.tokentype.LEFTPAREN:
                             paren_depth+=1
-                            prevtoken = currtoken
                         elif chartoken.type is self.tokentype.RIGHTPAREN:
                             paren_depth-=1
-                            prevtoken = currtoken
-
-                        if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
-                            tokens.append(self.createToken("COLUMN", curchar))
-                            curchar = ''
-                        elif curchar and prevcmd and prevcmd.type is self.tokentype.FROM:
                             tokens.append(self.createToken("TABLE", curchar))
-                            curchar = ''
+
+                        # if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
+                        #     print('column', curchar)
+                        #     tokens.append(self.createToken("COLUMN", curchar))
+                        #     curchar = ''
+                        # elif curchar and prevcmd and prevcmd.type is self.tokentype.FROM:
+                        #     tokens.append(self.createToken("TABLE", curchar))
+                        #     curchar = ''
                         tokens.append(chartoken)
+                        prevtoken = chartoken
                         continue
                     else:
                         curchar+=char
                         curchartoken = self.getToken(curchar)
                         if curchartoken.type:
                             tokens.append(curchartoken)
+                            prevtoken = curchartoken
+                        else:
+                            if prevtoken:
+                                if prevtoken.type is self.tokentype.RIGHTPAREN:
+                                    temp_token = self.createToken("AS", curchar)
+                                    tokens.append(temp_token)
+                                    prevtoken = temp_token
+                                if prevtoken.type is self.tokentype.COMMA or prevtoken.type is self.tokentype.SELECT:   
+                                    temp_token = self.createToken("COLUMN", curchar)
+                                    tokens.append(temp_token)
+                                    prevtoken = temp_token
+                          
+                if prevtoken:
+                    if prevtoken.type is self.tokentype.FROM:
+                        temp_token = self.createToken("TABLE", curchar)
+                        tokens.append(temp_token)
+                        prevtoken = temp_token
+                        continue
+                    if prevtoken.type is self.tokentype.TABLE or prevtoken.type is self.tokentype.COLUMN:
+                        temp_token = self.createToken("AS", curchar)
+                        tokens.append(temp_token)
+                        prevtoken = temp_token
                         
             else:
                 tokens.append(currtoken)
-            prevtoken = currtoken
+                prevtoken = currtoken
+            
             if currtoken.type is self.tokentype.SELECT or currtoken.type is self.tokentype.FROM:
                 prevcmd = currtoken
             # try:
             #     prevcmd = self.getPrevCmd(currtoken.type)
             # except Exception as e:
             #     print(e)
-        print(f"Paren depth: {paren_depth}")
         print(f"Statement type: {cmd.value}")
         print("Found tokens:")
         for token in tokens:
