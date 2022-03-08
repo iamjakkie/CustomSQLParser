@@ -4,8 +4,8 @@ from CustomSQLParser.lexer.tokenizer import Tokenizer
 def main():
     sftokenizer = Tokenizer(SnowflakeTokenType, SnowflakeToken)
     queries = ['SELECT a, b, c FROM (SELECT a, b, c FROM test) a'
-                ,'SELECT a, b FROM xyz a'
-                ,'SELECT a b FROM db2']
+                ,'SELECT a, b c FROM xyz a'
+                ,'SELECT a AS b FROM db2']
     for query in queries:
         sftokenizer.tokenize(query)
 

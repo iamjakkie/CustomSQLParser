@@ -234,7 +234,7 @@ class Tokenizer():
                             prevtoken = curchartoken
                         else:
                             if prevtoken:
-                                if prevtoken.type is self.tokentype.RIGHTPAREN:
+                                if prevtoken.type is self.tokentype.RIGHTPAREN or prevtoken.type is self.tokentype.COLUMN or prevtoken.type is self.tokentype.ALIAS:
                                     temp_token = self.createToken("AS", curchar)
                                     tokens.append(temp_token)
                                     prevtoken = temp_token
@@ -249,10 +249,10 @@ class Tokenizer():
                         tokens.append(temp_token)
                         prevtoken = temp_token
                         continue
-                    if prevtoken.type is self.tokentype.TABLE or prevtoken.type is self.tokentype.COLUMN:
-                        temp_token = self.createToken("AS", curchar)
-                        tokens.append(temp_token)
-                        prevtoken = temp_token
+                    # if prevtoken.type is self.tokentype.TABLE or prevtoken.type is self.tokentype.COLUMN:
+                    #     temp_token = self.createToken("AS", curchar)
+                    #     tokens.append(temp_token)
+                    #     prevtoken = temp_token
                         
             else:
                 tokens.append(currtoken)
