@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from Pickuery_structures.ast import AST
-from CustomSQLParser.lexer.tokenizer import Tokenizer
+# from Pickuery_structures.ast import AST
+from CustomSQLParser.lexer.tokenizer import SnowflakeTokenizer
 
 
 class Interpreter(ABC):
@@ -10,5 +10,14 @@ class Interpreter(ABC):
         self.tokenizer = tokenizer
     
     @abstractmethod
-    def translate_query(self, query) -> AST:
-        ...
+    def translate_query(self, query) -> None:
+        tokens = self.tokenizer.tokenize(query)
+        for token in tokens:
+            print(token)
+
+class SnowflakeInterpreter(Interpreter):
+    def __init__(self):
+        super().__init__(SnowflakeTokenizer)
+
+    def translate_query(self, query) -> None:
+        return super().translate_query(query)

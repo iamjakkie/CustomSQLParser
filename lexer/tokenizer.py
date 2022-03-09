@@ -1,11 +1,15 @@
+from abc import ABC, abstractmethod
 from typing import List
 from CustomSQLParser.lexer.token import Token
+from CustomSQLParser.lexer.token import SnowflakeTokenType, SnowflakeToken
 # from CustomSQLParser.Pickuery_structures.ast import AST
 
 class Tokenizer():
+    @abstractmethod
     def __init__(self, tokentype, token) -> None:
         self.tokentype = tokentype
         self.tokenfamily = token
+        #TODO: move tokens to single data structure in token
         self.SINGLE_TOKENS = {
             "(": self.tokentype.LEFTPAREN,
             ")": self.tokentype.RIGHTPAREN,
@@ -174,6 +178,7 @@ class Tokenizer():
             self.tokentype.FROM,
         }
 
+    @abstractmethod
     def getToken(self, value):
         return self.tokenfamily(self.KEYWORDS.get(value), value)
 
@@ -184,11 +189,13 @@ class Tokenizer():
         #     print('here')
         #     return token 
 
+    @abstractmethod
     def createToken(self, type, value):
         return self.tokenfamily(self.KEYWORDS.get(type), value)
 
+    @abstractmethod
     def tokenize(self, query:str):
-        print(query)
+        # print(query)
         statements = query.split()
         cmd = None
         #TODO: convert to loop with try except, None should not become a Token object
@@ -264,12 +271,26 @@ class Tokenizer():
             #     prevcmd = self.getPrevCmd(currtoken.type)
             # except Exception as e:
             #     print(e)
-        print(f"Statement type: {cmd.value}")
-        print("Found tokens:")
-        for token in tokens:
-            print(token)
+        return tokens
+        # print(f"Statement type: {cmd.value}")
+        # print("Found tokens:")
+        # for token in tokens:
+        #     print(token)
 
+class SnowflakeTokenizer(Tokenizer):
+    def __init__(self) -> None:
+        super().__init__(SnowflakeTokenType, SnowflakeToken)
 
+    def getToken(self, value):
+        return super().getToken(value)
+
+    def createToken(self, type, value):
+        return super().createToken(type, value)
+
+    def tokenize(self, query: str):
+        return super().tokenize(query)
+
+    
 # class SnowflakeTokenizer(Tokenizer):
 #     def __init__(self, tokenizer) -> None:
 #         self.tokentype = SnowflakeTokenType
