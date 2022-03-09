@@ -11,6 +11,7 @@ class Interpreter(ABC):
     
     @abstractmethod
     def translate_query(self, query) -> None:
+        print(self.tokenizer)
         tokens = self.tokenizer.tokenize(query)
         for token in tokens:
             print(token)
