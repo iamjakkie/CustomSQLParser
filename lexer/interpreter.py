@@ -7,11 +7,10 @@ from CustomSQLParser.lexer.tokenizer import SnowflakeTokenizer
 class Interpreter(ABC):
     @abstractmethod
     def __init__(self, tokenizer):
-        self.tokenizer = tokenizer
+        self.tokenizer = tokenizer()
     
     @abstractmethod
     def translate_query(self, query) -> None:
-        print(self.tokenizer)
         tokens = self.tokenizer.tokenize(query)
         for token in tokens:
             print(token)

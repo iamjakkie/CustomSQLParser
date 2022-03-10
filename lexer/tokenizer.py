@@ -196,86 +196,87 @@ class Tokenizer():
     @abstractmethod
     def tokenize(self, query:str):
         # print(query)
-        statements = query.split()
-        cmd = None
-        #TODO: convert to loop with try except, None should not become a Token object
-        tokens = []
-        # for word in statements:
-        #     tokens.append(self.tokenfamily(self.KEYWORDS.get(word), word))
-        # statement_type = tokens[0].value
-        prevtoken = prevcmd = None
-        paren_depth = 0
-        # tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
-        for i, word in enumerate(statements):
-            currtoken = self.getToken(word)
-            if i == 0:
-                cmd = currtoken
-            #TODO: process here all the tokens to save the order
-            if not currtoken.type:
-                curchar = ''
-                for char in currtoken.value:
-                    #TODO: char can be both, append to the prev char and separate token
-                    chartoken = self.getToken(char)
-                    if chartoken.type:
-                        if chartoken.type is self.tokentype.LEFTPAREN:
-                            paren_depth+=1
-                        elif chartoken.type is self.tokentype.RIGHTPAREN:
-                            paren_depth-=1
-                            tokens.append(self.createToken("TABLE", curchar))
+        # statements = query.split()
+        # cmd = None
+        # #TODO: convert to loop with try except, None should not become a Token object
+        # tokens = []
+        # # for word in statements:
+        # #     tokens.append(self.tokenfamily(self.KEYWORDS.get(word), word))
+        # # statement_type = tokens[0].value
+        # prevtoken = prevcmd = None
+        # paren_depth = 0
+        # # tokens = [self.tokenfamily(self.KEYWORDS.get(word, None), word) for word in statements]
+        # for i, word in enumerate(statements):
+        #     currtoken = self.getToken(word)
+        #     if i == 0:
+        #         cmd = currtoken
+        #     #TODO: process here all the tokens to save the order
+        #     if not currtoken.type:
+        #         curchar = ''
+        #         for char in currtoken.value:
+        #             #TODO: char can be both, append to the prev char and separate token
+        #             chartoken = self.getToken(char)
+        #             if chartoken.type:
+        #                 if chartoken.type is self.tokentype.LEFTPAREN:
+        #                     paren_depth+=1
+        #                 elif chartoken.type is self.tokentype.RIGHTPAREN:
+        #                     paren_depth-=1
+        #                     tokens.append(self.createToken("TABLE", curchar))
 
-                        # if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
-                        #     print('column', curchar)
-                        #     tokens.append(self.createToken("COLUMN", curchar))
-                        #     curchar = ''
-                        # elif curchar and prevcmd and prevcmd.type is self.tokentype.FROM:
-                        #     tokens.append(self.createToken("TABLE", curchar))
-                        #     curchar = ''
-                        tokens.append(chartoken)
-                        prevtoken = chartoken
-                        continue
-                    else:
-                        curchar+=char
-                        curchartoken = self.getToken(curchar)
-                        if curchartoken.type:
-                            tokens.append(curchartoken)
-                            prevtoken = curchartoken
-                        else:
-                            if prevtoken:
-                                if prevtoken.type is self.tokentype.RIGHTPAREN or prevtoken.type is self.tokentype.COLUMN or prevtoken.type is self.tokentype.ALIAS:
-                                    temp_token = self.createToken("AS", curchar)
-                                    tokens.append(temp_token)
-                                    prevtoken = temp_token
-                                if prevtoken.type is self.tokentype.COMMA or prevtoken.type is self.tokentype.SELECT:   
-                                    temp_token = self.createToken("COLUMN", curchar)
-                                    tokens.append(temp_token)
-                                    prevtoken = temp_token
+        #                 # if curchar and prevcmd and prevcmd.type is self.tokentype.SELECT:
+        #                 #     print('column', curchar)
+        #                 #     tokens.append(self.createToken("COLUMN", curchar))
+        #                 #     curchar = ''
+        #                 # elif curchar and prevcmd and prevcmd.type is self.tokentype.FROM:
+        #                 #     tokens.append(self.createToken("TABLE", curchar))
+        #                 #     curchar = ''
+        #                 tokens.append(chartoken)
+        #                 prevtoken = chartoken
+        #                 continue
+        #             else:
+        #                 curchar+=char
+        #                 curchartoken = self.getToken(curchar)
+        #                 if curchartoken.type:
+        #                     tokens.append(curchartoken)
+        #                     prevtoken = curchartoken
+        #                 else:
+        #                     if prevtoken:
+        #                         if prevtoken.type is self.tokentype.RIGHTPAREN or prevtoken.type is self.tokentype.COLUMN or prevtoken.type is self.tokentype.ALIAS:
+        #                             temp_token = self.createToken("AS", curchar)
+        #                             tokens.append(temp_token)
+        #                             prevtoken = temp_token
+        #                         if prevtoken.type is self.tokentype.COMMA or prevtoken.type is self.tokentype.SELECT:   
+        #                             temp_token = self.createToken("COLUMN", curchar)
+        #                             tokens.append(temp_token)
+        #                             prevtoken = temp_token
                           
-                if prevtoken:
-                    if prevtoken.type is self.tokentype.FROM:
-                        temp_token = self.createToken("TABLE", curchar)
-                        tokens.append(temp_token)
-                        prevtoken = temp_token
-                        continue
-                    # if prevtoken.type is self.tokentype.TABLE or prevtoken.type is self.tokentype.COLUMN:
-                    #     temp_token = self.createToken("AS", curchar)
-                    #     tokens.append(temp_token)
-                    #     prevtoken = temp_token
+        #         if prevtoken:
+        #             if prevtoken.type is self.tokentype.FROM:
+        #                 temp_token = self.createToken("TABLE", curchar)
+        #                 tokens.append(temp_token)
+        #                 prevtoken = temp_token
+        #                 continue
+        #             # if prevtoken.type is self.tokentype.TABLE or prevtoken.type is self.tokentype.COLUMN:
+        #             #     temp_token = self.createToken("AS", curchar)
+        #             #     tokens.append(temp_token)
+        #             #     prevtoken = temp_token
                         
-            else:
-                tokens.append(currtoken)
-                prevtoken = currtoken
+        #     else:
+        #         tokens.append(currtoken)
+        #         prevtoken = currtoken
             
-            if currtoken.type is self.tokentype.SELECT or currtoken.type is self.tokentype.FROM:
-                prevcmd = currtoken
-            # try:
-            #     prevcmd = self.getPrevCmd(currtoken.type)
-            # except Exception as e:
-            #     print(e)
-        return tokens
+        #     if currtoken.type is self.tokentype.SELECT or currtoken.type is self.tokentype.FROM:
+        #         prevcmd = currtoken
+        #     # try:
+        #     #     prevcmd = self.getPrevCmd(currtoken.type)
+        #     # except Exception as e:
+        #     #     print(e)
+        # return tokens
         # print(f"Statement type: {cmd.value}")
         # print("Found tokens:")
         # for token in tokens:
         #     print(token)
+        ...
 
 class SnowflakeTokenizer(Tokenizer):
     def __init__(self) -> None:
