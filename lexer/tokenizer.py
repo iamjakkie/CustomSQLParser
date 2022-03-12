@@ -342,6 +342,10 @@ class SnowflakeTokenizer(Tokenizer):
                                     temp_token = self.createToken("COLUMN", curchar)
                                     tokens.append(temp_token)
                                     prevtoken = temp_token
+                                if prevtoken.type is self.tokentype.JOIN:
+                                    temp_token = self.createToken("TABLE", curchar)
+                                    tokens.append(temp_token)
+                                    prevtoken = temp_token
                           
                 if prevtoken:
                     if prevtoken.type is self.tokentype.FROM:
